@@ -17,25 +17,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-info_text = """
-Send me a photo and in the caption write the numbers corresponding to the effects you want to apply:
-1 - blur
-2 - contour
-3 - detail
-4 - edge_enhance
-5 - emdoss
-6 - find_edged
-7 - sharpen
-8 - smooth
-"""
+def load_text(file_path):
+    with open(file_path, "r", encoding="UTF-8") as txt_file:
+        text = txt_file.read()
+        return text
 
-start_text = f"""
-Hi! I can put effects on your photo.
-{info_text}
-commands:
-/start
-/info
-"""
+
+start_text = load_text("texts/start_text.txt")
+info_text = load_text("texts/info_text.txt")
+
 
 def pil_to_bytes(pil_photo):
     new_photo = pil_photo.copy()

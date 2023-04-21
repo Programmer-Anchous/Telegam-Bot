@@ -3,26 +3,6 @@ from PIL import Image, ImageFilter
 import numpy as np
 
 
-#--------------------------------------------------------
-# filters = {
-#     "Blur": ImageFilter.BLUR,
-#     "Contour": ImageFilter.CONTOUR,
-#     "Detail": ImageFilter.DETAIL,
-#     "Edge Enchance": ImageFilter.EDGE_ENHANCE,
-#     "Edge Enchance More": ImageFilter.EDGE_ENHANCE_MORE,
-#     "Emboss": ImageFilter.EMBOSS,
-#     "Find Edges": ImageFilter.FIND_EDGES,
-#     "Sharpen": ImageFilter.SHARPEN,
-#     "Smooth": ImageFilter.SMOOTH,
-#     "Smooth More": ImageFilter.SMOOTH_MORE,
-# }
-
-
-# def preset_filters(im, filter0):
-#     im = im.filter(filter0)
-#     return im
-
-
 def blur(im):
     im = im.filter(ImageFilter.BLUR)
     return im
@@ -63,50 +43,15 @@ def smooth(im):
     return im
 
 
-filters_and_effects = (blur, contour, detail, edge_enhance, emboss, find_edges, sharpen, smooth)
-#--------------------------------------------------------
-def box_blur(im, radius=5):
-    im = im.filter(ImageFilter.BoxBlur(radius))
-    return im
-
-
-def gaussian_blur(im, radius=5):
-    im = im.filter(ImageFilter.GaussianBlur(radius))
-    return im
-
-
 def unsharp_mask(im, radius=2, percent=300, threshold=3):
-    filter1 = ImageFilter.UnsharpMask(radius=radius, percent=percent, threshold=threshold)
+    filter1 = ImageFilter.UnsharpMask(
+        radius=radius, percent=percent, threshold=threshold
+    )
     im = im.filter(filter1)
     return im
 
-#--------------------------------------------------------
 
-
-def channels(im, rgb):
-    rgb = tuple(map(lambda x: x / 50, rgb))
-    im = im.convert("RGB")
-
-    Matrix = (
-        rgb[0],   0,  0, 0,
-        0,   rgb[1],  0, 0,
-        0,     0,  rgb[2], 0
-    )
-
-    im = im.convert("RGB", Matrix)
-    return im
-
-
-def transparensy(im, alpha):
-    im_rgb = im
-    im_rgba = im_rgb.copy()
-    im_rgba.putalpha(alpha)
-    return im_rgba
-
-
-#--------------------------------------------------------
-
-def stereo_effect(im, delta):
+def stereo_effect(im, delta=10):
     # creates a stereo effect
     delta //= 2
     pixels_im = im.load()
@@ -132,7 +77,7 @@ def lightest_pixel(pixels, i, j, x, y, area):
     return r, g, b
 
 
-def lightest_pixel_effect(im, area=5):
+def lightest_pixel_effect(im, area=3):
     im = im.convert("RGB")
     pixels_im = im.load()
     new_im = im.copy()
@@ -168,3 +113,18 @@ def two_colors(im):
     return
 
 
+filters_and_effects = (
+    negative_effect,
+    black_and_white_effect,
+    blur,
+    lightest_pixel_effect,
+    stereo_effect,
+    contour,
+    detail,
+    edge_enhance,
+    emboss,
+    find_edges,
+    sharpen,
+    smooth,
+    unsharp_mask,
+)
