@@ -25,7 +25,7 @@ def load_text(file_path):
 
 start_text = load_text("texts/start_text.txt")
 info_text = load_text("texts/info_text.txt")
-filters_text = load_text("texts/filters.txt")
+filters_text = load_text("texts/filters_text.txt")
 
 
 def pil_to_bytes(pil_photo):
@@ -77,9 +77,16 @@ async def filters_handler(update, context):
         message = f"I haven't got such filters: {', '.join(map(str, wrong_filters))}"
         await context.bot.send_message(chat_id=update.effective_chat.id, text=message)
     else:
+        # creating temporary message
+        processing_message = await context.bot.send_message(chat_id=update.effective_chat.id, text="Processing...")
+
         for index in filters_to_apply:
             dict_index = int(index) - 1
             pil_photo = filters_and_effects[dict_index](pil_photo)
+        
+        await context.bot.delete_message(chat_id=update.effective_chat.id, message_id=processing_message.message_id)
+        # deleting temporary message
+        del processing_message
         
         bytes_new_photo = pil_to_bytes(pil_photo)
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=bytes_new_photo)

@@ -1,6 +1,6 @@
 Hi! I can put effects on your photo.
 
-Send me a photo and in the caption write the numbers corresponding to the effects you want to apply:
+Send me a photo and after that send the numbers corresponding to the effects you want to apply:
   1 - negative
   2 - black and white
   3 - blur
