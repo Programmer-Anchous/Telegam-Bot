@@ -4,25 +4,66 @@ import numpy as np
 
 
 #--------------------------------------------------------
-filters = {
-    "Blur": ImageFilter.BLUR,
-    "Contour": ImageFilter.CONTOUR,
-    "Detail": ImageFilter.DETAIL,
-    "Edge Enchance": ImageFilter.EDGE_ENHANCE,
-    "Edge Enchance More": ImageFilter.EDGE_ENHANCE_MORE,
-    "Emboss": ImageFilter.EMBOSS,
-    "Find Edges": ImageFilter.FIND_EDGES,
-    "Sharpen": ImageFilter.SHARPEN,
-    "Smooth": ImageFilter.SMOOTH,
-    "Smooth More": ImageFilter.SMOOTH_MORE,
-}
+# filters = {
+#     "Blur": ImageFilter.BLUR,
+#     "Contour": ImageFilter.CONTOUR,
+#     "Detail": ImageFilter.DETAIL,
+#     "Edge Enchance": ImageFilter.EDGE_ENHANCE,
+#     "Edge Enchance More": ImageFilter.EDGE_ENHANCE_MORE,
+#     "Emboss": ImageFilter.EMBOSS,
+#     "Find Edges": ImageFilter.FIND_EDGES,
+#     "Sharpen": ImageFilter.SHARPEN,
+#     "Smooth": ImageFilter.SMOOTH,
+#     "Smooth More": ImageFilter.SMOOTH_MORE,
+# }
 
 
-def preset_filters(im, filter0):
-    im = im.filter(filter0)
+# def preset_filters(im, filter0):
+#     im = im.filter(filter0)
+#     return im
+
+
+def blur(im):
+    im = im.filter(ImageFilter.BLUR)
     return im
 
 
+def contour(im):
+    im = im.filter(ImageFilter.CONTOUR)
+    return im
+
+
+def detail(im):
+    im = im.filter(ImageFilter.DETAIL)
+    return im
+
+
+def edge_enhance(im):
+    im = im.filter(ImageFilter.EDGE_ENHANCE)
+    return im
+
+
+def emboss(im):
+    im = im.filter(ImageFilter.EMBOSS)
+    return im
+
+
+def find_edges(im):
+    im = im.filter(ImageFilter.FIND_EDGES)
+    return im
+
+
+def sharpen(im):
+    im = im.filter(ImageFilter.SHARPEN)
+    return im
+
+
+def smooth(im):
+    im = im.filter(ImageFilter.SMOOTH)
+    return im
+
+
+filters_and_effects = (blur, contour, detail, edge_enhance, emboss, find_edges, sharpen, smooth)
 #--------------------------------------------------------
 def box_blur(im, radius=5):
     im = im.filter(ImageFilter.BoxBlur(radius))
@@ -125,3 +166,5 @@ def two_colors(im):
             r, g, b = pixels_new_im[i, j]
             pixels_new_im[i, j] = r, g, b
     return
+
+
