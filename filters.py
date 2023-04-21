@@ -101,3 +101,27 @@ def lightest_pixel_effect(im, area=5):
         for j in range(y):
             pixels_new_im[i, j] = lightest_pixel(pixels_im, i, j, x, y, area)
     return new_im
+
+
+def black_and_white_effect(im):
+    im = im.convert("L")
+    im = im.convert("RGB")
+    return im
+
+
+def negative_effect(im):
+    img_data = np.array(im)
+    img_reversed_data = 255 - img_data
+    img_reversed = Image.fromarray(img_reversed_data)
+    return img_reversed
+
+
+def two_colors(im):
+    new_im = im.copy()
+    pixels_new_im = new_im.load()
+    x, y = im.size
+    for i in range(x):
+        for j in range(y):
+            r, g, b = pixels_new_im[i, j]
+            pixels_new_im[i, j] = r, g, b
+    return
