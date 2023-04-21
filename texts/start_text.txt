@@ -21,3 +21,4 @@ Example of text in caption:
 commands:
   /start
   /info
+  /filters

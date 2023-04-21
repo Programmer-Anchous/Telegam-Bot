@@ -1,0 +1,13 @@
+1 - negative
+2 - black and white
+3 - blur
+4 - lightest pixel effect
+5 - stereo effect
+6 - contour
+7 - detail
+8 - edge enhance
+9 - emboss
+10 - find edges
+11 - sharpen
+12 - smooth
+13 - unsharp mask

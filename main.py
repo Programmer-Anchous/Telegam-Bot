@@ -1,6 +1,6 @@
 import logging
 from telegram.ext import Application, filters
-from telegram.ext import CommandHandler, MessageHandler
+from telegram.ext import CommandHandler, MessageHandler, ConversationHandler
 from config import BOT_TOKEN
 
 from io import BytesIO
@@ -25,6 +25,7 @@ def load_text(file_path):
 
 start_text = load_text("texts/start_text.txt")
 info_text = load_text("texts/info_text.txt")
+filters_text = load_text("texts/filters.txt")
 
 
 def pil_to_bytes(pil_photo):
@@ -43,8 +44,8 @@ async def info(update, context):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=info_text)
 
 
-async def answer(update, context):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
+async def filters_command(update, context):
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=filters_text)
 
 
 async def handle_photo(update, context):
@@ -53,27 +54,47 @@ async def handle_photo(update, context):
     response = get(url)
     bytes_obj = BytesIO(response.content)
 
-    text = update.message.caption
+    context.user_data["photo_bytes"] = bytes_obj
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="send numbers of filters")
+
+
+async def filters_handler(update, context):
+    if "photo_bytes" not in context.user_data:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="To put effects, you firstly need to send me a photo.")
+    text = update.message.text
     text = text.strip()
 
-    pil_photo = Image.open(bytes_obj)
-    for index in text.split():
-        pil_photo = filters_and_effects[int(index) - 1](pil_photo)
-    
-    bytes_new_photo = pil_to_bytes(pil_photo)
+    pil_photo = Image.open(context.user_data["photo_bytes"])
 
-    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=bytes_new_photo)
+    wrong_filters = set()
+
+    filters_to_apply = text.split()
+    for filter_ in filters_to_apply:
+        if not (filter_.isdigit() and (int(filter_) - 1) < len(filters_and_effects)):
+            wrong_filters.add(filter_)
+
+    if wrong_filters:
+        message = f"I haven't got such filters: {', '.join(map(str, wrong_filters))}"
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+    else:
+        for index in filters_to_apply:
+            dict_index = int(index) - 1
+            pil_photo = filters_and_effects[dict_index](pil_photo)
+        
+        bytes_new_photo = pil_to_bytes(pil_photo)
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=bytes_new_photo)
 
 
 def main():
     application = Application.builder().token(BOT_TOKEN).build()
 
-    text_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, answer)
-    application.add_handler(text_handler)
-
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("info", info))
+    application.add_handler(CommandHandler("filters", filters_command))
     application.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+
+    text_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, filters_handler)
+    application.add_handler(text_handler)
 
     application.run_polling()
 
