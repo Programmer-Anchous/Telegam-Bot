@@ -10,6 +10,7 @@ from telegram.ext import Application, filters
 from telegram.ext import CommandHandler, MessageHandler
 from config import BOT_TOKEN
 
+
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.DEBUG
 )
@@ -17,11 +18,22 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+help_info = """
+Send me a photo and in the caption write the numbers, which correspond effects.
+1 - black and white effect
+Example: 
+1, 1 = black and white effect on the photo
+"""
+
+
 async def start(update, context):
-    user = update.effective_user
     await update.message.reply_html(
         f"Hi! I can put effects on your photo.",
     )
+
+
+async def help_info(update, context):
+    await update.message.reply_html
 
 
 async def answer(update, context):
@@ -35,7 +47,7 @@ async def handle_photo(update, context):
     bytes_obj = BytesIO(response.content)
 
     text = update.message.caption
-
+    
     await context.bot.send_photo(chat_id=update.effective_chat.id, photo=bytes_obj)
 
 
