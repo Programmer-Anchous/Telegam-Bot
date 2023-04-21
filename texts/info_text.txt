@@ -13,5 +13,5 @@ Send me a photo and after that send the numbers corresponding to the effects you
   12 - smooth
   13 - unsharp mask
 
-Example of text in caption:
+Example of numbers for effects:
   "1 3 11" - will put negative, blur and sharpen effects on photo
