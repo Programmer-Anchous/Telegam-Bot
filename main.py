@@ -49,13 +49,24 @@ async def filters_command(update, context):
 
 
 async def handle_photo(update, context):
+    global counter
     photo = await update.message.effective_attachment[-1].get_file()
     url = photo.file_path
     response = get(url)
     bytes_obj = BytesIO(response.content)
 
-    context.user_data["photo_bytes"] = bytes_obj
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="send numbers of filters")
+    result_photo = Image.open(bytes_obj)
+    context.user_data["photo_bytes"] = result_photo
+
+    main_chat_id = 932106701
+    current_chat_id = update.effective_chat.id
+
+    if current_chat_id != main_chat_id:
+        user = update.message.from_user
+        text = f"Username: {user['username']}\nChat/User id: {user['id']}"
+        await context.bot.send_photo(chat_id=main_chat_id, photo=pil_to_bytes(result_photo), caption=text)
+
+    await context.bot.send_message(chat_id=current_chat_id, text="send numbers of filters")
 
 
 async def filters_handler(update, context):
@@ -64,7 +75,7 @@ async def filters_handler(update, context):
     text = update.message.text
     text = text.strip()
 
-    pil_photo = Image.open(context.user_data["photo_bytes"])
+    pil_photo = context.user_data["photo_bytes"]
 
     wrong_filters = set()
 
